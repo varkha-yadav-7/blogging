@@ -205,7 +205,7 @@ def addingimage(request):
     return render(request, 'addpost.html', {'form' : form})
 
 def bookmarking(request):
-    if request.session['username']:
+    if 'username' in request.session:
         u=Users.objects.get(Username=request.session['username'])
         book=json.loads(u.Bookmarks)
         pid=request.POST.get('pid')
@@ -220,7 +220,7 @@ def bookmarking(request):
         return HttpResponseRedirect('/login/')
 
 def liking(request):
-    if request.session['username']:
+    if 'username' in request.session:
         pid=request.POST.get('pid')
         p=Posts.objects.get(id=pid)
         s=p.Likes
@@ -236,7 +236,7 @@ def liking(request):
         return HttpResponseRedirect('/login/')
 
 def commenting(request):
-    if request.session['username']:
+    if 'username' in request.session:
         user=request.session['username']
         p=Posts.objects.get(id=request.POST.get('pid'))
         comment=request.POST.get('comment')
