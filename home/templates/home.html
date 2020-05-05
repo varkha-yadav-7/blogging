@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body style="background-color: rgb(201, 198, 197); text-align: center;">
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand">Authentication</span>
+            <ul class="row justify-content-end">
+            <li><a href="/" class="navbar-brand">Home</a></li>
+            {% if request.session.name %}
+            <li><a class="navbar-brand" href="/result/">Your Portal</a></li>
+            <li><a href="/logout/" class="navbar-brand">Logout of {{request.session.name}}</a></li>
+            {% else %}
+            <li><a href="/signup/" class="navbar-brand">Sign up</a></li>
+            <li><a href="/login/" class="navbar-brand">Login</a></li>
+            <li><a href="/myadmin/" class="navbar-brand">Admin</a></li>
+            {% endif %}
+            </ul>
+          </nav>
+          <br>
+          {% block bodyhere %}
+          <h1>Blogging</h1><br>
+          {% for i in post %}
+            <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
+                <h5>Post by {{ i.Username }}</h5>
+                <img src="{{ i.Image.url }}">
+                <h5>{{ i.caption }}</h5>
+                <form action="/liking/" method="POST">{% csrf_token %}
+                    <button value="{{i.id}}" name="pid">Like</button>
+                </form><br>
+                <form action="/bookmarking/" method="POST">{% csrf_token %}
+                    <button value="{{i.id}}" name="pid">Bookmark</button>
+                </form><br>
+                <form action="/commenting/" method="POST">{% csrf_token %}
+                    <input type="text" name="comment" placeholder="Type a comment"> 
+                    <button value="{{i.id}}" name="pid">Comment</button>
+                </form><br>
+            </div><br>
+            {% endfor %}
+          {% endblock %}
+    </body>
+</html>

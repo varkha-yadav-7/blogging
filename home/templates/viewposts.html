@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        {% block bodyhere %}
+        <h1>Your Posts !</h1><br>
+        {% for i in post %}
+        <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
+            <img src="{{ i.Image.url }}">
+            <h5>{{ i.caption }}</h5>
+            <form action="/editpost/" method="POST">{% csrf_token %}
+                <button value="{{ i.id }}" name="pid">Edit Post</button>
+            </form><br>
+            <form action="/deletepost/" method="POST">{% csrf_token %}
+                <button value="{{ i.id }}" name="pid">Delete Post</button>
+            </form><br>
+            <form action="/likes/" method="POST">{% csrf_token %}
+            <button value="{{ i.id }}" name="post_id">View Likes</button>
+            </form><br>
+            <form action="/comments/" method="POST">{% csrf_token %}
+            <button value="{{i.id}}" name="pid">View Comments</button>
+            </form>
+        </div><br>
+        {% endfor %}
+        {% endblock %}
+    </body>
+</html>

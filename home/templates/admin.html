@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        {% block bodyhere %}
+        <h1>Welcome Admin</h1><br>
+        <form action="/viewadmin/" method="POST">{% csrf_token %}
+            <button>View all Posts</button>
+        </form><br><br>
+        <h3>Users</h3><br>
+        {% for i in users %}
+            <h5>{{ i.Username }}</h5><br>
+            <form action="/viewinga/" method="POST">{% csrf_token %}
+                <button value="{{i.Username}}" name="username">View Profile</button>
+            </form><br>
+            <form action="/updatinga/" method="POST">{% csrf_token %}
+                <button value="{{i.Username}}" name="username">Update Profile</button>
+            </form><br>
+            <form action="/deletinga/" method="POST">{% csrf_token %}
+                <button value="{{i.Username}}" name="username">Delete Profile</button>
+            </form><br>
+            <br>
+        {% endfor %}
+        {% endblock %}
+    </body>
+</html>

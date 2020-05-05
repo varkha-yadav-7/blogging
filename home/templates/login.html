@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        {% block bodyhere %}
+        <h1>Hello User !</h1><br>
+        <div class="blurry">
+            <h2>Please Log In to your account</h2><br>
+            <form action="/verify/" method="post">{% csrf_token %}
+            <input id="username" type="text" placeholder="Username" name="username" required>
+            <p><br></p>
+            <input id="pass" type="password" placeholder="Password" name="pass" required>
+            <p><br></p>
+            <input type="submit" value="Log In">
+            </form>
+                <p><br></p>
+                <a href="/signup/"><input type="submit" value="New User ?"></a>
+                <p><br></p>
+                <a href="/forgotpassword/"><input type="submit" value="Forgot Password ?"></a>
+                <p><br></p>
+        </div>
+        <br>
+        <h4>{{error}}</h4>
+        {% endblock %}
+        </body>
+    </html>

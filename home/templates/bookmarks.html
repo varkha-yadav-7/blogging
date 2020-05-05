@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        {% block bodyhere %}
+        <h1>Bookmarked Posts</h1>
+        {% for i in book %}
+        <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
+            {% if i.Username %}
+                <h5>By {{ i.Username }}</h5>
+                <img src="{{i.Image.url}}">
+                <h5>{{i.caption}}</h5>
+                <br><form action="/removebookmark/" method="POST">{% csrf_token %}
+                    <button value="{{i.id}}" name="object">Remove Bookmark</button>
+                </form>
+            {% else %}
+                <h5>{{i}}</h5>
+            {% endif %}
+        </div><br>
+        {% endfor %}
+        {% endblock %}
+    </body>
+</html>

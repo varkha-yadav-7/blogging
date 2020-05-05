@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        {% block bodyhere %}
+        <h2>Edit Profile</h2><br>
+        <form action="/editing/" method="post">{% csrf_token %}
+            <input type="text" placeholder="{{ pro.First_Name }}" name="fname">
+            <p><br></p>
+            <input type="text" placeholder="{{ pro.Last_Name }}" name="lname">
+            <p><br></p>
+            <input type="number" placeholder="{{ pro.Phone_no }}" name="phno">
+            <p><br></p>
+            <input type="email" placeholder="{{ pro.Email }}" name="email">
+            <p><br></p>
+            <input type="submit" value="Save Changes">
+        </form>
+        {% endblock %}
+	</body>
+</html>

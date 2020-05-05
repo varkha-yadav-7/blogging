@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<title>Authentication</title>
+		{% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+	<body>
+	<h1>Hello New User !</h1>
+	<div>
+		{% block bodyhere %}
+		<h2>Please enter the details</h1><br>
+            <form action="/registering/" method="post">{% csrf_token %}
+				<input type="text" placeholder="First Name" name="fname" required>
+				<p><br></p>
+				<input type="text" placeholder="Last Name" name="lname" required>
+				<p><br></p>
+				<input title="10 Digits and should be valid" type="number" pattern="[9876]{3}.[0-9]{7}" placeholder="Phone Number" name="phno" required>
+				<p><br></p>
+				<input id="emails" type="email" placeholder="Email" name="email" required>
+				<p><br></p>
+				<input id="username" type="text" placeholder="Username" name="username" required>
+				<p><br></p>
+				<input id="pass" type="password" placeholder="Password" name="pass" pattern=".{8,}" title="Atleast 8 characters" required>
+				<p><br></p>
+				<input type="submit" value="Register">
+			</form>
+			<br>
+		<h4>{{error}}</h4>
+		{% endblock %}
+	</div>
+	</body>
+</html>
