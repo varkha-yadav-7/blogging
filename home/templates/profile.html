@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Authentication</title>
+        <title>Blogging</title>
         {% extends 'home.html' %}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
@@ -14,8 +14,13 @@
                 <p>Last Name : {{ pro.Last_Name }}</p>
                 <p>Email : {{ pro.Email }}</p>
                 <p>Phone number : {{ pro.Phone_no }}</p>
-                <p>Username : {{pro.Username}}</p>
+                <p>Username : {{ pro.Username }}</p>
                 <p><br></p>
+                {% if request.session.username %}
+                    <form action="/editprofile/" method="POST">{% csrf_token %}
+                        <button>Update Profile</button>
+                    </form><br>
+                {% endif %}
                 <h4>{{edits}}</h4>
         {% endblock %}
 	</body>

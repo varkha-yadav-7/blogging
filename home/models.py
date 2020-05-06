@@ -8,6 +8,7 @@ class Users(models.Model):
     Username=models.CharField(max_length=20,primary_key=True)
     Password=models.CharField(max_length=20)
     Bookmarks=models.TextField(max_length=10000,default='[]')
+    Likes=models.TextField(max_length=10000,default='[]')
 
 class Posts(models.Model):
     Image=models.ImageField(upload_to='images/', default='images/None/no-image.jpg')

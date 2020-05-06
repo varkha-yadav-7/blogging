@@ -15,8 +15,14 @@ def home(request):
     edits=''
     errora=''
     errorl=''
+    t=[]
+    d=[]
     p=Posts.objects.all()
-    return render(request,'home.html',{'post':p})
+    if 'username' in request.session:
+        u=Users.objects.get(Username=request.session['username'])
+        t=json.loads(u.Likes)
+        d=json.loads(u.Bookmarks)
+    return render(request,'home.html',{'post':p,'likes':t,'book':d})
 
 def signup(request):
     global errora, edits, errorl
@@ -42,13 +48,7 @@ def registering(request):
     request.session['name']=firstname+" "+lastname
     request.session['username']=user
     error=''
-    return HttpResponseRedirect('/result/')
-
-def result(request):
-    global error,edits
-    error=''
-    edits=''
-    return(render(request,'result.html',context=None))
+    return HttpResponseRedirect('/')
 
 def login(request):
     global error,edits
@@ -65,7 +65,7 @@ def verify(request):
         if user==i.Username and passw==i.Password:
             request.session['name']=i.First_Name+" "+i.Last_Name
             request.session['username']=i.Username
-            return HttpResponseRedirect('/result/')
+            return HttpResponseRedirect('/')
     global errorl
     errorl='Invalid username or password , Try again'
     return HttpResponseRedirect('/login/')
@@ -111,6 +111,8 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def changepass(request):
+    global edits
+    edits=''
     return render(request,'changepass.html')
 
 def changing(request):
@@ -122,7 +124,7 @@ def changing(request):
         edits='Passwords did not match'
         return HttpResponseRedirect('/viewprofile/')
     user=request.session['username']
-    c=Users.objects.get(username=user)
+    c=Users.objects.get(Username=user)
     if(c.Password==cpass):
         c.Password=npass
         c.save()
@@ -187,9 +189,13 @@ def deletinga(request):
     return render(request,'admin.html',{'users':c})
 
 def addpost(request):
+    global edits
+    edits=''
     return render(request,'addpost.html',context=None)
 
 def viewposts(request):
+    global edits
+    edits=''
     c=Posts.objects.filter(Username=request.session['username'])
     return render(request,'viewposts.html',{'post':c})
 
@@ -209,31 +215,52 @@ def bookmarking(request):
         u=Users.objects.get(Username=request.session['username'])
         book=json.loads(u.Bookmarks)
         pid=request.POST.get('pid')
-        if pid in book:
-            return render(request,'error.html',{'message':'Already Bookmarked'})
-        else:
-            book.append(pid)
-            u.Bookmarks=json.dumps(book)
-            u.save()
-            return HttpResponseRedirect('/')
+        book.append(pid)
+        u.Bookmarks=json.dumps(book)
+        u.save()
+        return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/login/')
+
+def unbookmarking(request):
+    u=Users.objects.get(Username=request.session['username'])
+    book=json.loads(u.Bookmarks)
+    pid=request.POST.get('pid')
+    book.remove(pid)
+    u.Bookmarks=json.dumps(book)
+    u.save()
+    return HttpResponseRedirect('/')
 
 def liking(request):
     if 'username' in request.session:
         pid=request.POST.get('pid')
+        u=Users.objects.get(Username=request.session['username'])
         p=Posts.objects.get(id=pid)
-        s=p.Likes
-        like=json.loads(s)
-        if request.session['username'] in like:
-            return render(request,'error.html',{'message':'Already Liked'})
-        else:
-            like.append(request.session['username'])
-            p.Likes=json.dumps(like)
-            p.save()
-            return HttpResponseRedirect('/')
+        like=json.loads(p.Likes)
+        like.append(request.session['username'])
+        p.Likes=json.dumps(like)
+        p.save()
+        like=json.loads(u.Likes)
+        like.append(pid)
+        u.Likes=json.dumps(like)
+        u.save()
+        return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/login/')
+
+def unliking(request):
+    pid=request.POST.get('pid')
+    u=Users.objects.get(Username=request.session['username'])
+    p=Posts.objects.get(id=pid)
+    like=json.loads(p.Likes)
+    like.remove(request.session['username'])
+    p.Likes=json.dumps(like)
+    p.save()
+    like=json.loads(u.Likes)
+    like.remove(pid)
+    u.Likes=json.dumps(like)
+    u.save()
+    return HttpResponseRedirect('/')
 
 def commenting(request):
     if 'username' in request.session:
@@ -244,7 +271,7 @@ def commenting(request):
         c.save()
         return HttpResponseRedirect('/')
     else:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/login/')
 
 def likes(request):
     postid=request.POST.get('post_id')
@@ -265,6 +292,8 @@ def comments(request):
     return render(request,'comments.html',{'com':c})
 
 def bookmarks(request):
+    global edits
+    edits=''
     c=Users.objects.get(Username=request.session['username'])
     book=json.loads(c.Bookmarks)
     b=[]
@@ -307,4 +336,3 @@ def removebookmark(request):
     u.Bookmarks=json.dumps(book)
     u.save()
     return HttpResponseRedirect('/')
-

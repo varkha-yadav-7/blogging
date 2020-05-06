@@ -7,7 +7,6 @@ urlpatterns=[
     path('',views.home),
     path('signup/',views.signup),
     path('registering/',views.registering),
-    path('result/',views.result),
     path('verify/',views.verify),
     path('login/',views.login),
     path('viewprofile/',views.viewprofile),
@@ -37,6 +36,8 @@ urlpatterns=[
     path('editingpost/',views.editingpost),
     path('viewadmin/',views.viewadmin),
     path('removebookmark/',views.removebookmark),
+    path('unliking/',views.unliking),
+    path('unbookmarking/',views.unbookmarking),
 ]
 
 if settings.DEBUG: 

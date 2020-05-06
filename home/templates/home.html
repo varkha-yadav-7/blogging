@@ -2,16 +2,96 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Authentication</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font-family: "Lato", sans-serif;
+            }
+            button{
+                background-color: black;
+                color: white;
+            }
+
+            input{
+                border:solid thin black;
+            }
+            .sidebar {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #111;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
+
+            .sidebar a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+            .sidebar a:hover {
+                color: #f1f1f1;
+            }
+
+            .sidebar .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+            .openbtn {
+                font-size: 20px;
+                cursor: pointer;
+                background-color: #111;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+            }
+
+            .openbtn:hover {
+                background-color: #444;
+            }
+
+            #main {
+                transition: margin-left .5s;
+                padding: 16px;
+            }
+
+            /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+            @media screen and (max-height: 450px) {
+                .sidebar {padding-top: 15px;}
+                .sidebar a {font-size: 18px;}}
+                .hide {display: none;}
+
+            .myDIV:hover + .hide {
+                display: block;
+                color: red;}
+        </style>
+        <title>Blogging</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body style="background-color: rgb(201, 198, 197); text-align: center;">
-        <nav class="navbar navbar-dark bg-dark">
-            <span class="navbar-brand">Authentication</span>
+        <nav class="navbar navbar-dark" style="background-color: black;">
+            {% if request.session.name %}
+                <div id="main">
+                    <button class="openbtn" onclick="openNav()">☰</button>
+                </div>
+            {% else %}
+                <span class="navbar-brand">Blogging</span>
+            {% endif %}
             <ul class="row justify-content-end">
             <li><a href="/" class="navbar-brand">Home</a></li>
             {% if request.session.name %}
-            <li><a class="navbar-brand" href="/result/">Your Portal</a></li>
             <li><a href="/logout/" class="navbar-brand">Logout of {{request.session.name}}</a></li>
             {% else %}
             <li><a href="/signup/" class="navbar-brand">Sign up</a></li>
@@ -20,20 +100,49 @@
             {% endif %}
             </ul>
           </nav>
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                <a href="/viewprofile/">Profile</a>
+                <a href="/addpost/">Add Post</a>
+                <a href="/viewposts/">Your Posts</a>
+                <a href="/bookmarks/">Bookmarks</a>
+                </div>
           <br>
+            <script>
+                function openNav() {
+                document.getElementById("mySidebar").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+                }
+                function closeNav() {
+                document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("main").style.marginLeft= "0";
+                }
+            </script>
           {% block bodyhere %}
           <h1>Blogging</h1><br>
           {% for i in post %}
             <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
-                <h5>Post by {{ i.Username }}</h5>
+                <h3>Post by {{ i.Username }}</h3>
                 <img src="{{ i.Image.url }}">
-                <h5>{{ i.caption }}</h5>
-                <form action="/liking/" method="POST">{% csrf_token %}
-                    <button value="{{i.id}}" name="pid">Like</button>
-                </form><br>
-                <form action="/bookmarking/" method="POST">{% csrf_token %}
-                    <button value="{{i.id}}" name="pid">Bookmark</button>
-                </form><br>
+                <h4>{{ i.caption }}</h4>
+                {% if i.id|stringformat:"i" in likes %}
+                    <form action="/unliking/" method="POST">{% csrf_token %}
+                        <button style="color:rgb(151, 151, 156);" value="{{i.id}}" name="pid">Liked</button>
+                    </form><br>
+                {% else %}
+                    <form action="/liking/" method="POST">{% csrf_token %}
+                        <button value="{{i.id}}" name="pid">Like</button>
+                    </form><br>
+                {% endif %}
+                {% if i.id|stringformat:"i" in book %}
+                    <form action="/unbookmarking/" method="POST">{% csrf_token %}
+                        <button style="color: rgb(151, 151, 156);" value="{{i.id}}" name="pid">Bookmarked</button>
+                    </form><br>
+                {% else %}
+                    <form action="/bookmarking/" method="POST">{% csrf_token %}
+                        <button value="{{i.id}}" name="pid">Bookmark</button>
+                    </form><br>
+                {% endif %}
                 <form action="/commenting/" method="POST">{% csrf_token %}
                     <input type="text" name="comment" placeholder="Type a comment"> 
                     <button value="{{i.id}}" name="pid">Comment</button>
