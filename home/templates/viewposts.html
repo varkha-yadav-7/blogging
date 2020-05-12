@@ -2,32 +2,61 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Blogging</title>
         {% extends 'home.html' %}
+        <title>Blogging</title>
+        {% load static %}
+        <script src="{% static 'home/base.js' %}"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
         {% block bodyhere %}
         <h1>Your Posts !</h1><br>
-        {% load mytags %}
         {% for i in post %}
         <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
-            <img src="{{ i.Image.url }}">
+            <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
             <h4>{{ i.caption }}</h4>
-            <form action="/editpost/" method="POST">{% csrf_token %}
-                <button value="{{ i.id }}" name="pid">Edit Post</button>
-            </form><br>
-            <form action="/deletepost/" method="POST">{% csrf_token %}
-                <button value="{{ i.id }}" name="pid">Delete Post</button>
-            </form><br>
-            <form action="/likes/" method="POST">{% csrf_token %}
-            <button value="{{ i.id }}" name="post_id">View Likes</button>
-            </form><br>
-            <form action="/comments/" method="POST">{% csrf_token %}
-            <button value="{{i.id}}" name="pid">View Comments</button>
-            </form>
+            <div style="width: 100%;">
+                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 50px;">View Likes</a>
+                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">View Comments</a><br>
+                <form style="display:inline-block; padding: 10px;" action="/editpost/" method="POST">{% csrf_token %}
+                    <button value="{{ i.id }}" name="pid">Edit Post</button>
+                </form>
+                <form style="display:inline-block" action="/deletepost/" method="POST">{% csrf_token %}
+                    <button value="{{ i.id }}" name="pid">Delete Post</button>
+                </form> 
+            </div>
         </div><br>
         {% endfor %}
+        <div class="modal fade" id="LikesModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">People who liked this post</h5>
+                </div>
+                <div style="text-align: left;" id="likers" class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>  
+        </div>
+        <div class="modal fade" id="CommentsModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">People who commented on this post</h5>
+                </div>
+                <div style="text-align: left;" id="commenters" class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>  
+        </div>
         {% endblock %}
     </body>
 </html>

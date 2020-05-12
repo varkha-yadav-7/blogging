@@ -1,87 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                font-family: "Lato", sans-serif;
-            }
-            button{
-                background-color: black;
-                color: white;
-            }
-
-            input{
-                border:solid thin black;
-            }
-            .sidebar {
-                height: 100%;
-                width: 0;
-                position: fixed;
-                z-index: 1;
-                top: 0;
-                left: 0;
-                background-color: #111;
-                overflow-x: hidden;
-                transition: 0.5s;
-                padding-top: 60px;
-            }
-
-            .sidebar a {
-                padding: 8px 8px 8px 32px;
-                text-decoration: none;
-                font-size: 25px;
-                color: #818181;
-                display: block;
-                transition: 0.3s;
-            }
-
-            .sidebar a:hover {
-                color: #f1f1f1;
-            }
-
-            .sidebar .closebtn {
-                position: absolute;
-                top: 0;
-                right: 25px;
-                font-size: 36px;
-                margin-left: 50px;
-            }
-
-            .openbtn {
-                font-size: 20px;
-                cursor: pointer;
-                background-color: #111;
-                color: white;
-                padding: 10px 15px;
-                border: none;
-            }
-
-            .openbtn:hover {
-                background-color: #444;
-            }
-
-            #main {
-                transition: margin-left .5s;
-                padding: 16px;
-            }
-
-            /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-            @media screen and (max-height: 450px) {
-                .sidebar {padding-top: 15px;}
-                .sidebar a {font-size: 18px;}}
-                .hide {display: none;}
-
-            .myDIV:hover + .hide {
-                display: block;
-                color: red;}
-        </style>
         <title>Blogging</title>
+        {% load static %}
+        <script src="{% static 'home/base.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'home/blogging.css' %}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body style="background-color: rgb(201, 198, 197); text-align: center;">
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
         <nav class="navbar navbar-dark" style="background-color: black;">
+          {% load mytags %}
             {% if request.session.name %}
                 <div id="main">
                     <button class="openbtn" onclick="openNav()">☰</button>
@@ -92,6 +26,15 @@
             <ul class="row justify-content-end">
             <li><a href="/" class="navbar-brand">Home</a></li>
             {% if request.session.name %}
+            <div class="dropdown">
+            <a onclick="notif()" class="navbar-brand" role="button" id="mydrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Notifications<span id="nbadge" class="badge badge-danger">{% totalNotifications request.session.username %}</span></a>
+            <div style="width: 300px;" class="dropdown-menu" aria-labelledby="mydrop">
+              <div class="dropdown-header" style="color: blue;">Marked as Read Now</div>
+              <div id="notifylist">
+
+              </div>
+            </div>
+            </div>
             <li><a href="/logout/" class="navbar-brand">Logout of {{request.session.name}}</a></li>
             {% else %}
             <li><a href="/signup/" class="navbar-brand">Sign up</a></li>
@@ -99,56 +42,78 @@
             <li><a href="/myadmin/" class="navbar-brand">Admin</a></li>
             {% endif %}
             </ul>
-          </nav>
+        </nav>
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="/viewprofile/">Profile</a>
                 <a href="/addpost/">Add Post</a>
                 <a href="/viewposts/">Your Posts</a>
                 <a href="/bookmarks/">Bookmarks</a>
-                </div>
-          <br>
-            <script>
-                function openNav() {
-                document.getElementById("mySidebar").style.width = "250px";
-                document.getElementById("main").style.marginLeft = "250px";
-                }
-                function closeNav() {
-                document.getElementById("mySidebar").style.width = "0";
-                document.getElementById("main").style.marginLeft= "0";
-                }
-            </script>
+            </div>
+            <br>
           {% block bodyhere %}
           <h1>Blogging</h1><br>
           {% for i in post %}
             <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
                 <h3>Post by {{ i.Username }}</h3>
-                <img src="{{ i.Image.url }}">
+                <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
                 <h4>{{ i.caption }}</h4>
-                {% if i.id|stringformat:"i" in likes %}
-                    <form action="/unliking/" method="POST">{% csrf_token %}
-                        <button style="color:rgb(151, 151, 156);" value="{{i.id}}" name="pid">Liked</button>
-                    </form><br>
-                {% else %}
-                    <form action="/liking/" method="POST">{% csrf_token %}
-                        <button value="{{i.id}}" name="pid">Like</button>
-                    </form><br>
-                {% endif %}
-                {% if i.id|stringformat:"i" in book %}
-                    <form action="/unbookmarking/" method="POST">{% csrf_token %}
-                        <button style="color: rgb(151, 151, 156);" value="{{i.id}}" name="pid">Bookmarked</button>
-                    </form><br>
-                {% else %}
-                    <form action="/bookmarking/" method="POST">{% csrf_token %}
-                        <button value="{{i.id}}" name="pid">Bookmark</button>
-                    </form><br>
-                {% endif %}
+                {%csrf_token%}
+                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 40px;">Likes : {% totalLikes i.id %}</a>
+                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">Comments : {% totalComments i.id %}</a>
+                {% if request.session.username %}
+                {%csrf_token%}
+                <div style="padding: 10px;" class="content-block">
+                <button style="margin-right: 40px;" onclick="liked({{i.id}})" id="like{{i.id}}">{% getLikes i.id likes %}</button>
+                <button onclick="bookmarked({{i.id}})" id="book{{i.id}}">{% getBookmarks i.id book %}</button>
+                </div>
                 <form action="/commenting/" method="POST">{% csrf_token %}
                     <input type="text" name="comment" placeholder="Type a comment"> 
-                    <button value="{{i.id}}" name="pid">Comment</button>
-                </form><br>
+                <button onclick="comments({{i.id}})" id="comment{{i.id}}" value="{{i.id}}" name="pid">Comment</button>
+                </form>
+                {% else %}
+                <form action="/login/" method="POST">{% csrf_token %}
+                    <button>Like</button><br><p>         </p>
+                    <button>Bookamrk</button><br>
+                    <input type="text" placeholder="Type a comment"> 
+                    <button>Comment</button><br>
+                </form>
+                {% endif %}
             </div><br>
             {% endfor %}
+            <div class="modal fade" id="LikesModal" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">People who liked this post</h5>
+                    </div>
+                    <div style="text-align: left;" id="likers" class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>  
+            </div>
+            <div class="modal fade" id="CommentsModal" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">People who commented on this post</h5>
+                    </div>
+                    <div style="text-align: left;" id="commenters" class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>  
+            </div>
+            <div id="mycollapse" class="collapse">
+                <div class="card card-body">Panel Body</div>
+            </div>
           {% endblock %}
     </body>
 </html>

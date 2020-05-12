@@ -38,6 +38,7 @@ urlpatterns=[
     path('removebookmark/',views.removebookmark),
     path('unliking/',views.unliking),
     path('unbookmarking/',views.unbookmarking),
+    path('notify/',views.notify),
 ]
 
 if settings.DEBUG: 

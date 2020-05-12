@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Users,Posts,Comments
+from .models import Users,Posts,Comments,Notifications
 from .forms import PostForm
 from django.http import HttpResponseRedirect,HttpResponse
 import json
@@ -22,7 +22,7 @@ def home(request):
         u=Users.objects.get(Username=request.session['username'])
         t=json.loads(u.Likes)
         d=json.loads(u.Bookmarks)
-    return render(request,'home.html',{'post':p,'likes':t,'book':d})
+    return render(request,'home.html',{'post':p,'book':d,'likes':t})
 
 def signup(request):
     global errora, edits, errorl
@@ -211,45 +211,43 @@ def addingimage(request):
     return render(request, 'addpost.html', {'form' : form})
 
 def bookmarking(request):
-    if 'username' in request.session:
-        u=Users.objects.get(Username=request.session['username'])
-        book=json.loads(u.Bookmarks)
-        pid=request.POST.get('pid')
-        book.append(pid)
-        u.Bookmarks=json.dumps(book)
-        u.save()
-        return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/login/')
+    u=Users.objects.get(Username=request.session['username'])
+    book=json.loads(u.Bookmarks)
+    pid=request.POST['id']
+    book.append(pid)
+    u.Bookmarks=json.dumps(book)
+    u.save()
+    return HttpResponse('working')
 
 def unbookmarking(request):
     u=Users.objects.get(Username=request.session['username'])
     book=json.loads(u.Bookmarks)
-    pid=request.POST.get('pid')
+    pid=request.POST['id']
     book.remove(pid)
     u.Bookmarks=json.dumps(book)
     u.save()
-    return HttpResponseRedirect('/')
+    return HttpResponse('working')
 
 def liking(request):
-    if 'username' in request.session:
-        pid=request.POST.get('pid')
-        u=Users.objects.get(Username=request.session['username'])
-        p=Posts.objects.get(id=pid)
-        like=json.loads(p.Likes)
-        like.append(request.session['username'])
-        p.Likes=json.dumps(like)
-        p.save()
-        like=json.loads(u.Likes)
-        like.append(pid)
-        u.Likes=json.dumps(like)
-        u.save()
-        return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/login/')
+    pid=request.POST['id']
+    u=Users.objects.get(Username=request.session['username'])
+    p=Posts.objects.get(id=pid)        
+    like=json.loads(p.Likes)
+    like.append(request.session['username'])
+    p.Likes=json.dumps(like)
+    p.save()
+    like=json.loads(u.Likes)
+    like.append(pid)
+    u.Likes=json.dumps(like)
+    u.save()
+    if request.session['username']!=p.Username:
+        msg=request.session['username']+" liked your post."
+        n=Notifications(Username=p.Username,Notify=msg,Post_id=p.id)
+        n.save()
+    return HttpResponse('working')
 
 def unliking(request):
-    pid=request.POST.get('pid')
+    pid=request.POST['id']
     u=Users.objects.get(Username=request.session['username'])
     p=Posts.objects.get(id=pid)
     like=json.loads(p.Likes)
@@ -260,21 +258,23 @@ def unliking(request):
     like.remove(pid)
     u.Likes=json.dumps(like)
     u.save()
-    return HttpResponseRedirect('/')
+    Notifications.objects.get(Post_id=p.id,Username=p.Username).delete()
+    return HttpResponse('working')
 
 def commenting(request):
-    if 'username' in request.session:
-        user=request.session['username']
-        p=Posts.objects.get(id=request.POST.get('pid'))
-        comment=request.POST.get('comment')
-        c=Comments(Username=user,Comment=comment,Post_id=p.id)
-        c.save()
-        return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/login/')
+    user=request.session['username']
+    p=Posts.objects.get(id=request.POST.get('pid'))
+    comment=request.POST.get('comment')
+    c=Comments(Username=user,Comment=comment,Post_id=p.id)
+    c.save()
+    if request.session['username']!=p.Username:
+        msg=user+" commented on your post"
+        n=Notifications(Username=p.Username,Notify=msg)
+        n.save()
+    return HttpResponseRedirect('/')
 
 def likes(request):
-    postid=request.POST.get('post_id')
+    postid=request.POST['id']
     l=Posts.objects.get(id=postid)
     like=json.loads(l.Likes)
     for i in like:
@@ -284,12 +284,15 @@ def likes(request):
         except:
             k=like.index(i)
             like[k]='Blogger'
-    return render(request,'likes.html',{'likes':like})
+    return HttpResponse(json.dumps(like))
 
 def comments(request):
-    pid=request.POST.get('pid')
+    pid=request.POST['id']
     c=Comments.objects.filter(Post_id=pid)
-    return render(request,'comments.html',{'com':c})
+    dict={}
+    for i in c:
+        dict[i.Username]=i.Comment
+    return HttpResponse(json.dumps(dict))
 
 def bookmarks(request):
     global edits
@@ -336,3 +339,12 @@ def removebookmark(request):
     u.Bookmarks=json.dumps(book)
     u.save()
     return HttpResponseRedirect('/')
+
+def notify(request):
+    nots=Notifications.objects.filter(Username=request.session['username'],read=False)
+    lis=[]
+    for i in nots:
+        i.read=True
+        lis.append(i.Notify)
+        i.save()
+    return HttpResponse(json.dumps(lis))

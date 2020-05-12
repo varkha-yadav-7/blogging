@@ -20,3 +20,9 @@ class Comments(models.Model):
     Post_id=models.IntegerField()
     Username=models.CharField(max_length=20)
     Comment=models.TextField(max_length=500)
+
+class Notifications(models.Model):
+    Username=models.CharField(max_length=20)
+    Post_id=models.IntegerField(default=0)
+    Notify=models.TextField(max_length=500)
+    read=models.BooleanField(default=False)
