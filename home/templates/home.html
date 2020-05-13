@@ -45,6 +45,8 @@
         </nav>
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ request.session.dp }}">
+                <a style="text-align: center; color:white;">{{request.session.username}}</a><br>
                 <a href="/viewprofile/">Profile</a>
                 <a href="/addpost/">Add Post</a>
                 <a href="/viewposts/">Your Posts</a>
@@ -73,8 +75,10 @@
                 </form>
                 {% else %}
                 <form action="/login/" method="POST">{% csrf_token %}
-                    <button>Like</button><br><p>         </p>
-                    <button>Bookamrk</button><br>
+                  <div style="padding: 10px;" class="content-block">
+                    <button style="margin-right: 40px;">Like</button>
+                    <button>Bookmark</button>
+                  </div>
                     <input type="text" placeholder="Type a comment"> 
                     <button>Comment</button><br>
                 </form>
@@ -110,9 +114,6 @@
                     </div>
                   </div>
                 </div>  
-            </div>
-            <div id="mycollapse" class="collapse">
-                <div class="card card-body">Panel Body</div>
             </div>
           {% endblock %}
     </body>

@@ -9,7 +9,9 @@
     <body>
         {% block bodyhere %}
         <h2>Edit Profile</h2><br>
-        <form action="/editing/" method="post">{% csrf_token %}
+        <form action="/editing/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src={{pro.Dp.url}}><br>
+            <input type="file" name="image"><p><br></p>
             <input type="text" placeholder="{{ pro.First_Name }}" name="fname">
             <p><br></p>
             <input type="text" placeholder="{{ pro.Last_Name }}" name="lname">
@@ -17,6 +19,8 @@
             <input type="number" placeholder="{{ pro.Phone_no }}" name="phno">
             <p><br></p>
             <input type="email" placeholder="{{ pro.Email }}" name="email">
+            <p><br></p>
+            <textarea placeholder="{{ pro.About }}" rows="10" cols="30" name="about"></textarea>
             <p><br></p>
             <button>Save Changes</button>
         </form><br>

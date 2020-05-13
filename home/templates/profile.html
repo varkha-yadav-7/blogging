@@ -10,11 +10,14 @@
         {% block bodyhere %}
         <h2>Profile</h2><br>
                 <p><br></p>
+                <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src={{pro.Dp.url}}>
+                <p style="font-weight: bold; padding: 10px;">Username : {{pro.Username}}</p>
                 <p>First Name : {{ pro.First_Name }}</p>
                 <p>Last Name : {{ pro.Last_Name }}</p>
                 <p>Email : {{ pro.Email }}</p>
                 <p>Phone number : {{ pro.Phone_no }}</p>
                 <p>Username : {{ pro.Username }}</p>
+                <p>About : {{ pro.About }}</p>
                 <p><br></p>
                 {% if request.session.username %}
                     <form action="/editprofile/" method="POST">{% csrf_token %}

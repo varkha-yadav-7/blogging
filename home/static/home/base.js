@@ -95,16 +95,21 @@ function showLikes(id)
         {
             var s=response.replace('[','');
             s=s.replace(']','');
-            s=s.split('"').join('');
-            var res=s.split(',');
-            var list = document.createElement('ul');
-            for (var i = 0; i < res.length; i++) 
+            if(s!='')
             {
-                var item = document.createElement('li');
-                item.appendChild(document.createTextNode(res[i]));
-                list.appendChild(item);
+                s=s.split('"').join('');
+                var res=s.split(',');
+                var list = document.createElement('ul');
+                for (var i = 0; i < res.length; i++) 
+                {
+                    var item = document.createElement('li');
+                    item.appendChild(document.createTextNode(res[i]));
+                    list.appendChild(item);
+                }
+                $('#likers').html(list);
             }
-            $('#likers').html(list);
+            else
+                $('#likers').html('No one has liked the post yet');
         },
         error: function(){ console.log('error')}
     });
@@ -120,16 +125,21 @@ function showComments(id)
         {
             var resp=response.replace('{','');
             resp=resp.replace('}','');
-            resp=resp.split('"').join('');
-            var res=resp.split(',');
-            var list = document.createElement('ul');
-            for (var i = 0; i < res.length; i++) 
+            if(resp!='')
             {
-                var item = document.createElement('li');
-                item.appendChild(document.createTextNode(res[i]));
-                list.appendChild(item);
+                resp=resp.split('"').join('');
+                var res=resp.split(',');
+                var list = document.createElement('ul');
+                for (var i = 0; i < res.length; i++) 
+                {
+                    var item = document.createElement('li');
+                    item.appendChild(document.createTextNode(res[i]));
+                    list.appendChild(item);
+                }
+                $('#commenters').html(list);
             }
-            $('#commenters').html(list);
+            else
+                $('#commenters').html('No one has commented on the post yet');
         },
         error: function(){ console.log('error')}
     });

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Users,Posts,Comments,Notifications
-from .forms import PostForm
+from .forms import PostForm,addDp
 from django.http import HttpResponseRedirect,HttpResponse
 import json
 
@@ -38,15 +38,17 @@ def registering(request):
     user=request.POST.get('username')
     email=request.POST.get('email')
     passw=request.POST.get('pass')
+    about=request.POST.get('about')
     for i in Users.objects.all():
         global error
         if user==i.Username:
             error='Username Already exists,Try again'
             return HttpResponseRedirect('/signup/')
-    s=Users(First_Name=firstname,Last_Name=lastname,Username=user,Phone_no=phno,Email=email,Password=passw,Bookmarks='[]')
+    s=Users(First_Name=firstname,Last_Name=lastname,Username=user,Phone_no=phno,Email=email,Password=passw,Bookmarks='[]',About=about)
     s.save()
     request.session['name']=firstname+" "+lastname
     request.session['username']=user
+    request.session['dp']=s.Dp.url
     error=''
     return HttpResponseRedirect('/')
 
@@ -65,6 +67,7 @@ def verify(request):
         if user==i.Username and passw==i.Password:
             request.session['name']=i.First_Name+" "+i.Last_Name
             request.session['username']=i.Username
+            request.session['dp']=i.Dp.url
             return HttpResponseRedirect('/')
     global errorl
     errorl='Invalid username or password , Try again'
@@ -85,7 +88,15 @@ def editing(request):
     lname=request.POST.get('lname')
     email=request.POST.get('email')
     phno=request.POST.get('phno')
+    about=request.POST.get('about')
+    form=addDp(request.POST,request.FILES)        
     c=Users.objects.get(Username=request.session['username'])
+    if form.is_valid():
+        c.Dp=form.cleaned_data['image']
+        c.save()
+        request.session['dp']=c.Dp.url
+    if about != '':
+        c.About=about
     if fname!="":
         c.First_Name=fname
     if lname!="":
@@ -108,6 +119,7 @@ def logout(request):
     errorl=''
     del request.session['username']
     del request.session['name']
+    del request.session['dp']
     return HttpResponseRedirect('/')
 
 def changepass(request):
@@ -204,7 +216,7 @@ def addingimage(request):
         form = PostForm(request.POST, request.FILES) 
         if form.is_valid():
             p=Posts(Image=form.cleaned_data['image'],caption=form.cleaned_data['capt'],Likes='[]',Username=request.session['username'])
-            p.save() 
+            p.save()
             return HttpResponseRedirect('/')
     else: 
         form = PostForm() 
