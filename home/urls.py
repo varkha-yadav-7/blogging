@@ -39,6 +39,7 @@ urlpatterns=[
     path('unliking/',views.unliking),
     path('unbookmarking/',views.unbookmarking),
     path('notify/',views.notify),
+    path('post/',views.post),
 ]
 
 if settings.DEBUG: 

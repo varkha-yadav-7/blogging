@@ -29,7 +29,7 @@ function liked(id)
             error: function(){ console.log('error')}
         });
     }
-    else ($(`#like${id}`).html()=='Like')
+    else if($(`#like${id}`).html()=='Like')
     {
         $.ajax(
         {

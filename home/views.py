@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Users,Posts,Comments,Notifications
 from .forms import PostForm,addDp
 from django.http import HttpResponseRedirect,HttpResponse
+from django.views.decorators.csrf import csrf_protect
 import json
 
 errora=''
@@ -205,6 +206,7 @@ def addpost(request):
     edits=''
     return render(request,'addpost.html',context=None)
 
+@csrf_protect
 def viewposts(request):
     global edits
     edits=''
@@ -270,7 +272,8 @@ def unliking(request):
     like.remove(pid)
     u.Likes=json.dumps(like)
     u.save()
-    Notifications.objects.get(Post_id=p.id,Username=p.Username).delete()
+    if request.session['username']!=p.Username:
+        Notifications.objects.filter(Username=p.Username,Post_id=pid).delete()
     return HttpResponse('working')
 
 def commenting(request):
@@ -319,10 +322,11 @@ def bookmarks(request):
             b.append('This post was deleted')
     return render(request,'bookmarks.html',{'book':b})
 
+@csrf_protect
 def deletepost(request):
-    pid=request.POST.get('pid')
+    pid=request.POST['pid']
     Posts.objects.get(id=pid).delete()
-    return HttpResponseRedirect('/')
+    return HttpResponse('working')
 
 def editpost(request):
     pid=request.POST.get('pid')
@@ -360,3 +364,6 @@ def notify(request):
         lis.append(i.Notify)
         i.save()
     return HttpResponse(json.dumps(lis))
+
+def post(request):
+    pass

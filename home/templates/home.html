@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" content="width=device-width, initial-scale=1.0">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Blogging</title>
         {% load static %}
@@ -17,8 +17,8 @@
         <nav class="navbar navbar-dark" style="background-color: black;">
           {% load mytags %}
             {% if request.session.name %}
-                <div id="main">
-                    <button class="openbtn" onclick="openNav()">☰</button>
+                <div>
+                    <button id="main" class="openbtn" onclick="openNav()">☰</button>
                 </div>
             {% else %}
                 <span class="navbar-brand">Blogging</span>
@@ -35,7 +35,7 @@
               </div>
             </div>
             </div>
-            <li><a href="/logout/" class="navbar-brand">Logout of {{request.session.name}}</a></li>
+            <li><a href="/logout/" class="navbar-brand">Logout ({{request.session.name}})</a></li>
             {% else %}
             <li><a href="/signup/" class="navbar-brand">Sign up</a></li>
             <li><a href="/login/" class="navbar-brand">Login</a></li>
