@@ -206,12 +206,14 @@ def addpost(request):
     edits=''
     return render(request,'addpost.html',context=None)
 
-@csrf_protect
 def viewposts(request):
-    global edits
-    edits=''
-    c=Posts.objects.filter(Username=request.session['username'])
-    return render(request,'viewposts.html',{'post':c})
+    try:
+        global edits
+        edits=''
+        c=Posts.objects.filter(Username=request.session['username'])
+        return render(request,'viewposts.html',{'post':c})
+    except ConnectionResetError as e:
+        return HttpResponse('handle exception')
 
 def addingimage(request): 
     if request.method == 'POST': 
@@ -322,11 +324,14 @@ def bookmarks(request):
             b.append('This post was deleted')
     return render(request,'bookmarks.html',{'book':b})
 
-@csrf_protect
 def deletepost(request):
-    pid=request.POST['pid']
-    Posts.objects.get(id=pid).delete()
-    return HttpResponse('working')
+    try:
+        
+        pid=request.POST['pid']
+        Posts.objects.get(id=pid).delete()
+        return HttpResponse('working')
+    except:
+        return HttpResponse('handle exception')
 
 def editpost(request):
     pid=request.POST.get('pid')

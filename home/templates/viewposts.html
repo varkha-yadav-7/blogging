@@ -10,6 +10,26 @@
     </head>
     <body>
         {% block bodyhere %}
+        <script>
+        function deletepost(id)
+          {   
+              $('#deleteit').click(function()
+              {
+                  $.ajax({
+                      type:'POST',
+                      url:'/deletepost/',
+                      data:{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"pid":id},
+                      success:function(){
+                        window.location='/';},
+                      error:function(){console.log('error')}
+                  });
+              })
+              $('#cancel').click(function()
+              {
+                id=0;
+              })
+          }
+        </script>
         <h1>Your Posts !</h1><br>
         {% for i in post %}
         <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
@@ -23,7 +43,7 @@
                     <button value="{{ i.id }}" name="pid">Edit Post</button>
                 </form>
                 {% csrf_token %}
-                <button onclick="deletepost({{i.id}})" id="del" data-toggle="modal" data-target="#deleteModal">Delete Post</button>
+                  <button onclick="deletepost({{i.id}})" id="del" data-toggle="modal" data-target="#deleteModal">Delete Post</button>
            </div>
         </div><br>
         {% endfor %}
@@ -68,24 +88,11 @@
               </div>
               <div class="modal-footer">
                <button name="taskid" style="background-color: black;" id="deleteit" type="button" class="btn btn-primary">Delete</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
               </div>
             </div>
           </div>
           </div>
-          <script>function deletepost(id)
-            {   
-                $('#deleteit').click(function()
-                {
-                    $.ajax({
-                        type:'POST',
-                        url:'/deletepost/',
-                        data:{'csrfmiddlewaretoken':$('input[csrfmiddlewaretoken]').val(),'pid':id},
-                        success:function(){location.reload();},
-                        error:function(){console.log('error')}
-                    });
-                })
-            }</script>
         {% endblock %}
     </body>
 </html>

@@ -8,17 +8,51 @@
     </head>
     <body>
         {% block bodyhere %}
+        <script>
+            function deletepost(id)
+              {   
+                  $('#deleteit').click(function()
+                  {
+                      $.ajax({
+                          type:'POST',
+                          url:'/deletepost/',
+                          data:{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"pid":id},
+                          success:function(){location.reload();},
+                          error:function(){console.log('error')}
+                      });
+                  })
+                  $('#cancel').click(function()
+                  {
+                    id=0;
+                  })
+              }
+            </script>
         <h1>All Posts </h1><br>
         {% for i in post %}
             <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
                 <h5>Post by {{ i.Username }}</h5>
                 <img src="{{ i.Image.url }}">
                 <h5>{{ i.caption }}</h5>
-                <form action="/deletepost/" method="POST">{% csrf_token %}
-                    <button value="{{i.id}}" name="pid">Delete Post</button>
-                </form><br>
+                {% csrf_token %}
+                  <button onclick="deletepost({{i.id}})" id="del" data-toggle="modal" data-target="#deleteModal">Delete Post</button>
             </div><br>
             {% endfor %}
+            <div class="modal fade" id="deleteModal" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Delete Post</h5>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the task ?
+                    </div>
+                    <div class="modal-footer">
+                     <button name="taskid" style="background-color: black;" id="deleteit" type="button" class="btn btn-primary">Delete</button>
+                      <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
           {% endblock %}
     </body>
 </html>
