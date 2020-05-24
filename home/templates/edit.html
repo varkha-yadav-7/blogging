@@ -11,7 +11,8 @@
         <h2>Edit Profile</h2><br>
         <form action="/editing/" method="post" enctype="multipart/form-data">{% csrf_token %}
             <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src={{pro.Dp.url}}><br>
-            <input type="file" name="image"><p><br></p>
+            <input type="file" name="image"><br>
+            <a href="/removeDp/">Remove Dp</a><br><br>
             <input type="text" placeholder="{{ pro.First_Name }}" name="fname">
             <p><br></p>
             <input type="text" placeholder="{{ pro.Last_Name }}" name="lname">

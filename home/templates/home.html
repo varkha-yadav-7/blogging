@@ -57,7 +57,7 @@
           <h1>Blogging</h1><br>
           {% for i in post %}
             <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
-                <h3>Post by {{ i.Username }}</h3>
+                <h3>Post by <a href="#" data-placement="right" data-toggle="popover" title="heading" data-content="Content">{{ i.Username }}</a></h3>
                 <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
                 <h4>{{ i.caption }}</h4>
                 {%csrf_token%}
@@ -115,6 +115,11 @@
                   </div>
                 </div>  
             </div>
+            <script>
+              $(document).ready(function(){
+                  $('[data-toggle="popover"]').popover();   
+              });
+              </script>
           {% endblock %}
     </body>
 </html>

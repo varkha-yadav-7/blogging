@@ -359,7 +359,7 @@ def removebookmark(request):
     book.remove(p)
     u.Bookmarks=json.dumps(book)
     u.save()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/bookmarks/')
 
 def notify(request):
     nots=Notifications.objects.filter(Username=request.session['username'],read=False)
@@ -370,5 +370,12 @@ def notify(request):
         i.save()
     return HttpResponse(json.dumps(lis))
 
-def post(request):
-    pass
+def removeDp(request):
+    user=request.session['username']
+    u=Users.objects.get(Username=user)
+    u.Dp.delete()
+    u.Dp='/images/dp.jpg'
+    u.save()
+    request.session['dp']=u.Dp.url
+    return HttpResponseRedirect('/viewprofile/')
+

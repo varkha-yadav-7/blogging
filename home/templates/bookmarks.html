@@ -8,6 +8,7 @@
     </head>
     <body>
         {% block bodyhere %}
+        {% load mytags %}
         <h1>Bookmarked Posts</h1>
         {% for i in book %}
         <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
@@ -15,14 +16,47 @@
                 <h3>By {{ i.Username }}</h3>
                 <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{i.Image.url}}">
                 <h4>{{i.caption}}</h4>
-                <br><form action="/removebookmark/" method="POST">{% csrf_token %}
+                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 40px;">Likes : {% totalLikes i.id %}</a>
+                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">Comments : {% totalComments i.id %}</a>
+                <br><br>
+                <form action="/removebookmark/" method="POST">{% csrf_token %}
                     <button value="{{i.id}}" name="object">Remove Bookmark</button>
-                </form>
+                </form><br>
             {% else %}
                 <h5>{{i}}</h5>
             {% endif %}
         </div><br>
         {% endfor %}
+        <div class="modal fade" id="LikesModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">People who liked this post</h5>
+                </div>
+                <div style="text-align: left;" id="likers" class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>  
+        </div>
+        <div class="modal fade" id="CommentsModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">People who commented on this post</h5>
+                </div>
+                <div style="text-align: left;" id="commenters" class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>  
+        </div>
         {% endblock %}
     </body>
 </html>

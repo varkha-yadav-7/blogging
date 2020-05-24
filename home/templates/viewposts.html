@@ -20,7 +20,7 @@
                       url:'/deletepost/',
                       data:{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"pid":id},
                       success:function(){
-                        window.location='/';},
+                        location.reload();},
                       error:function(){console.log('error')}
                   });
               })
@@ -35,11 +35,11 @@
         <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
             <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
             <h4>{{ i.caption }}</h4>
-            
+            {% load mytags %}
             <div style="width: 100%;">
-                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 50px;">View Likes</a>
-                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">View Comments</a><br>
-                <form style="display:inline-block; padding: 10px;" action="/editpost/" method="POST">{% csrf_token %}
+                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 50px;">View Likes( {% totalLikes i.id %} )</a>
+                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">View Comments( {% totalComments i.id %} )</a><br>
+                <form style="display:inline-block; padding: 10px; margin-right: 30px;" action="/editpost/" method="POST">{% csrf_token %}
                     <button value="{{ i.id }}" name="pid">Edit Post</button>
                 </form>
                 {% csrf_token %}

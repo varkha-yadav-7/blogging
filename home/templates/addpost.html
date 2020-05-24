@@ -12,7 +12,7 @@
         <form method = "post" action="/addingimage/" enctype="multipart/form-data"> {% csrf_token %}
             <h4>Add your Picture here</h4><br>
             <input type="file" name="image"><br><br>
-            <h4>Caption</h4><textarea name="capt" rows="10" cols="30"></textarea><br>
+            <h4>Caption</h4><textarea name="capt" rows="10" cols="30" required></textarea><br>
             <button type="submit">Upload</button> 
         </form> 
         {%endblock%}

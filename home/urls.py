@@ -39,7 +39,7 @@ urlpatterns=[
     path('unliking/',views.unliking),
     path('unbookmarking/',views.unbookmarking),
     path('notify/',views.notify),
-    path('post/',views.post),
+    path('removeDp/',views.removeDp),
 ]
 
 if settings.DEBUG: 

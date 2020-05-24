@@ -178,3 +178,6 @@ function notif()
         error: function(){console.log('error');}
     });
 }
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+  });
