@@ -1,6 +1,7 @@
 asgiref==3.2.7
 astroid==2.4.0
 Django==3.0.6
+django-cleanup==4.0.0
 gunicorn==20.0.4
 isort==4.3.21
 lazy-object-proxy==1.4.3
@@ -14,4 +15,4 @@ toml==0.10.0
 typed-ast==1.4.1
 whitenoise==5.0.1
 wrapt==1.12.1
-psycopg2-binary==2.8.5
+psycopg-binary2==2.8.5
