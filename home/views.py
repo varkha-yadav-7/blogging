@@ -19,6 +19,7 @@ def home(request):
     d=[]
     p=Posts.objects.all()
     if 'username' in request.session:
+        print(request.session['username'])
         u=Users.objects.get(Username=request.session['username'])
         t=json.loads(u.Likes)
         d=json.loads(u.Bookmarks)
@@ -88,6 +89,7 @@ def editprofile(request):
     return render(request,'edit.html',{'pro':u})
 
 def editing(request):
+    global edits
     fname=request.POST.get('fname')
     lname=request.POST.get('lname')
     email=request.POST.get('email')
@@ -106,12 +108,15 @@ def editing(request):
     if lname!="":
         c.Last_Name=lname
     if email!="":
+        for i in Users.objects.all():
+            if email==i.Email:
+                edits='Email Already exists,Try again'
+                return HttpResponseRedirect('/viewprofile/')
         c.Email=email
     if phno!="":
         c.Phone_no=phno
     c.save()
     request.session['name']=c.First_Name+" "+c.Last_Name
-    global edits
     edits='Changes Successfully updated'
     return HttpResponseRedirect('/viewprofile/')
 
@@ -309,10 +314,10 @@ def likes(request):
 def comments(request):
     pid=request.POST['id']
     c=Comments.objects.filter(Post_id=pid)
-    dict={}
+    li=[]
     for i in c:
-        dict[i.Username]=i.Comment
-    return HttpResponse(json.dumps(dict))
+        li.append(i.Username+' : '+i.Comment)
+    return HttpResponse(json.dumps(li))
 
 def bookmarks(request):
     global edits

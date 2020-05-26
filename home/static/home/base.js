@@ -123,8 +123,9 @@ function showComments(id)
         data: {"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"id": id},
         success: function(response)
         {
-            var resp=response.replace('{','');
-            resp=resp.replace('}','');
+            console.log(response);
+            var resp=response.replace('[','');
+            resp=resp.replace(']','');
             if(resp!='')
             {
                 resp=resp.split('"').join('');

@@ -11,7 +11,7 @@
         {% load mytags %}
         <h1>Bookmarked Posts</h1>
         {% for i in book %}
-        <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
+        <div class="container border-1" style="margin-left:auto;margin-right:auto;">
             {% if i.Username %}
                 <h3>By {{ i.Username }}</h3>
                 <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{i.Image.url}}">
