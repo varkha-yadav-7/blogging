@@ -10,11 +10,11 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body style="background-color: rgb(201, 198, 197); text-align: center;">
-      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
-        <nav class="navbar navbar-dark" style="background-color: black;">
+        <nav class="navbar navbar-dark mynav" style="background-color: black;">
           {% load mytags %}
             {% if request.session.name %}
                 <div>
@@ -23,12 +23,12 @@
             {% else %}
                 <span class="navbar-brand">Blogging</span>
             {% endif %}
-            <ul class="row justify-content-end">
+            <ul class="row justify-content-end mynav">
             <li><a href="/" class="navbar-brand">Home</a></li>
             {% if request.session.name %}
             <div class="dropdown">
             <a onclick="notif()" class="navbar-brand" role="button" id="mydrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Notifications<span id="nbadge" class="badge badge-danger">{% totalNotifications request.session.username %}</span></a>
-            <div style="width: 300px;" class="dropdown-menu" aria-labelledby="mydrop">
+            <div class="dropdown-menu mydrop" aria-labelledby="mydrop">
               <div class="dropdown-header" style="color: blue;">Marked as Read Now</div>
               <div id="notifylist">
 
@@ -56,8 +56,9 @@
           {% block bodyhere %}
           <h1>Blogging</h1><br>
           {% for i in post %}
-            <div style="border: thick solid black; padding: 5px; margin-left: 200px; margin-right: 200px;">
-                <h3>Post by <a href="#" data-placement="right" data-toggle="popover" title="heading" data-content="Content">{{ i.Username }}</a></h3>
+            <div class="container border-1" style="margin-left:auto;margin-right:auto;">
+                {%csrf_token%}
+                <h3>Post by <a onclick="pro({{ i.id }})" href="#profileModal" data-toggle="modal" id="profile">{{i.Username}}</a></h3>
                 <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
                 <h4>{{ i.caption }}</h4>
                 {%csrf_token%}
@@ -115,11 +116,56 @@
                   </div>
                 </div>  
             </div>
-            <script>
-              $(document).ready(function(){
-                  $('[data-toggle="popover"]').popover();   
-              });
-              </script>
+            <div class="modal fade" id="profileModal" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Profile</h5>
+                  </div>
+                  <div class="modal-body">
+                    <br>
+                    <div class="row">
+                      <div class="col">
+                      <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" id="dp">
+                      </div>
+                      <div class="col">
+                      <div style="font-weight: bold;" id="name"></div><br>
+                      <div style="text-align: left;" id="about"></div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>  
+          </div>
+          <script>
+            function pro(id)
+            {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/profile/",   
+                        data: {"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"id": id},
+                        success: function(response)
+                        {
+                            var s=response.replace('[','');
+                            s=s.replace(']','');
+                            if(s!="")
+                            {
+                              s=s.split('"').join('');
+                              var res=s.split(',');
+                              $('#dp').attr('src',res[1]);
+                              $('#name').html(res[0]);
+                              var k = res[2].replace(/\\r\\n/gm, "<br>");
+                              console.log(k);
+                              $('#about').html(k);
+                            }},
+                        error:function(){console.log('error');},
+                    });
+            }
+          </script>
           {% endblock %}
     </body>
 </html>

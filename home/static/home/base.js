@@ -178,6 +178,27 @@ function notif()
         error: function(){console.log('error');}
     });
 }
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
-  });
+function pro(id)
+{
+    $.ajax(
+    {
+        type: "POST",
+        url: "/profile/",   
+        data: {"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"id": id},
+        success: function(response)
+        {
+        console.log(response);
+        var s=response.replace('[','');
+        s=s.replace(']','');
+        if(s!="")
+        {
+            s=s.split('"').join('');
+            var res=s.split(',');
+            for(var i=0;i<res.length;i++)
+            {
+                console.log(res[i]);
+            }           
+        }},
+        error:function(){console.log('error');},
+    });
+}

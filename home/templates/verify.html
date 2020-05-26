@@ -8,7 +8,12 @@
     </head>
     <body>
         {% block bodyhere %}
-
+        <h1>Reset your password !</h1><br>
+        <h3>We will send an OTP at your email to reset password</h3><br>
+        <form method="POST" action="/reset/">{% csrf_token %}
+        <input type="email" name="email" placeholder="Enter Email Address">
+        <p><br></p>
+        <button>Send OTP</button> 
         {% endblock %}
-    </body>
-</html>
+        </body>
+    </html>

@@ -1,3 +1,8 @@
+.mydrop{ width: 300px;}
+.border-1{
+    border-style:solid;
+    border-width: 4px;
+}
 body {
     font-family: "Lato", sans-serif;
 }
@@ -68,10 +73,15 @@ input{
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
+@media screen and (max-height: 720px) {
+    .mydrop{ width: 200px;}
+    .mynav span { font-size: 12px;  }
+    .mynav li a{ font-size: 12px;}
+    .dropdown a{ font-size: 12px;}
     .sidebar {padding-top: 15px;}
-    .sidebar a {font-size: 18px;}}
-    .hide {display: none;}
+    .sidebar a {font-size: 18px;}
+    }
+.hide {display: none;}
 
 .myDIV:hover + .hide {
     display: block;

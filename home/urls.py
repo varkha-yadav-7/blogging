@@ -40,6 +40,10 @@ urlpatterns=[
     path('unbookmarking/',views.unbookmarking),
     path('notify/',views.notify),
     path('removeDp/',views.removeDp),
+    path('profile/',views.profile),
+    path('verifypass/',views.verifypass),
+    path('reset/',views.reset),
+    path('verifying/',views.verifying),
 ]
 
 if settings.DEBUG: 

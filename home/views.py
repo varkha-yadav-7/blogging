@@ -2,8 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Users,Posts,Comments,Notifications
 from .forms import PostForm,addDp
 from django.http import HttpResponseRedirect,HttpResponse
-from django.views.decorators.csrf import csrf_protect
-import json
+import json,smtplib,random
 
 errora=''
 error=''
@@ -33,6 +32,7 @@ def signup(request):
     return render(request,'signup.html',{'error':error})
 
 def registering(request):
+    global error
     firstname=request.POST.get('fname')
     lastname=request.POST.get('lname')
     phno=request.POST.get('phno')
@@ -41,9 +41,12 @@ def registering(request):
     passw=request.POST.get('pass')
     about=request.POST.get('about')
     for i in Users.objects.all():
-        global error
         if user==i.Username:
             error='Username Already exists,Try again'
+            return HttpResponseRedirect('/signup/')
+    for i in Users.objects.all():
+        if email==i.Email:
+            error='Email Already exists,Try again'
             return HttpResponseRedirect('/signup/')
     s=Users(First_Name=firstname,Last_Name=lastname,Username=user,Phone_no=phno,Email=email,Password=passw,Bookmarks='[]',About=about)
     s.save()
@@ -162,7 +165,7 @@ def admin_verify(request):
         return HttpResponseRedirect('/myadmin/')
 
 def forgotpass(request):
-    return HttpResponse('Under construction')
+    return render(request,'reset.html')
 
 def viewinga(request):
     user=request.POST.get('username')
@@ -379,3 +382,57 @@ def removeDp(request):
     request.session['dp']=u.Dp.url
     return HttpResponseRedirect('/viewprofile/')
 
+def profile(request):
+    ids=request.POST['id']
+    u=Users.objects.get(Username=Posts.objects.get(id=ids).Username)
+    res=[u.First_Name+' '+u.Last_Name,u.Dp.url,u.About]
+    print(u.About)
+    dict=json.dumps(res)
+    return HttpResponse(dict)
+
+def verifypass(request):
+    return render(request,'verify.html')
+
+def reset(request):
+    u=Users.objects.all()
+    email=request.POST.get('email')
+    for i in u:
+        if i.Email==email:
+            s=smtplib.SMTP('smtp.gmail.com',587)
+            s.starttls()
+            n=random.randrange(1000,9999)
+            print(n)
+            TEXT='Hello '+i.First_Name+'\nYour OTP is '+str(n)
+            request.session['otp']=n
+            request.session['email']=email
+            SUBJECT='Blogging app reset password'
+            message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT)
+            s.login('developer15032000@gmail.com','developer2019#')
+            s.sendmail('developer15032000@gmail.com',email,message)
+            s.quit()
+            return render(request,'reset.html',{'email':email})
+    global error
+    error='No such account found. Please sign up to continue'
+    return HttpResponseRedirect('/signup/')
+
+def verifying(request):
+    global errorl
+    print(request.session['otp'])
+    if request.session['otp']==int(request.POST.get('otp')):
+        del request.session['otp']
+        npass=request.POST.get('npass')
+        npassa=request.POST.get('npassa')
+        if npassa!=npass:
+            errorl='Passwords did not match'
+            return HttpResponseRedirect('/login/')
+        i=Users.objects.get(Email=request.session['email'])
+        i.Password=npass
+        i.save()
+        del request.session['email']
+        request.session['name']=i.First_Name+" "+i.Last_Name
+        request.session['username']=i.Username
+        request.session['dp']=i.Dp.url
+        return HttpResponseRedirect('/')
+    else:
+        errorl='Wrong OTP'
+        return HttpResponseRedirect('/login/')
