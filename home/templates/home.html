@@ -73,7 +73,7 @@
                 <form action="/commenting/" method="POST">{% csrf_token %}
                     <input type="text" name="comment" placeholder="Type a comment"> 
                 <button onclick="comments({{i.id}})" id="comment{{i.id}}" value="{{i.id}}" name="pid">Comment</button>
-                </form>
+                </form><br>
                 {% else %}
                 <form action="/login/" method="POST">{% csrf_token %}
                   <div style="padding: 10px;" class="content-block">
@@ -82,7 +82,7 @@
                   </div>
                     <input type="text" placeholder="Type a comment"> 
                     <button>Comment</button><br>
-                </form>
+                </form><br>
                 {% endif %}
             </div><br>
             {% endfor %}
@@ -139,7 +139,8 @@
                   </div>
                 </div>
               </div>  
-          </div>
+              </div>
+            </div>
           <script>
             function pro(id)
             {
