@@ -412,8 +412,8 @@ def reset(request):
             request.session['email']=email
             SUBJECT='Blogging app reset password'
             message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT)
-            s.login('developer15032000@gmail.com','developer2019#')
-            s.sendmail('developer15032000@gmail.com',email,message)
+            s.login(YOUR EMAIL ADDRESS,PASSWORD)
+            s.sendmail(YOUR EMAIL ADDRESS,email,message)
             s.quit()
             return render(request,'reset.html',{'email':email})
     global error
