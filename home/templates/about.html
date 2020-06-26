@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<title>Blogging</title>
+        {% extends 'home.html' %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+	<body>
+	<div>
+        {% block bodyhere %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <div class="blurry mx-auto">
+                <h1>About the Website</h1>
+                <p style="font-size: 1.5rem;">This is a website made in Django framework. With Html, CSS, Javascript, jquery and bootstrap used for front end.<br>Post,Like,Comment and Bookmark pictures by creating your own account.</p>
+                <br><br>
+                <h5>Contact the Developer</h5>
+                <a href="https://www.facebook.com/varkha.yadav.73/" target="_blank"><i class="fa fa-facebook-official"></i></a>
+                <a href="https://github.com/varkha-yadav-7" target="_blank"><i class="fa fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/varkha-yadav-b0a00a1a1/" target="_blank"><i class="fa fa-linkedin-square"></i></a>
+                <a href="https://www.instagram.com/varkha_yadav/" target="_blank"><i class="fa fa-instagram"></i></a>
+                <a href="https://twitter.com/varkha_yadav" target="_blank"><i class="fa fa-twitter"></i></a>
+            </div>
+		{% endblock %}
+	</div>
+	</body>
+</html>

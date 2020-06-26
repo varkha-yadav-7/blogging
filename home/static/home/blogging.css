@@ -1,33 +1,63 @@
-.mydrop{ width: 300px;}
-.border-1{
-    border-style:solid;
-    border-width: 4px;
+.blurry{
+    background-color: rgb(50, 94, 122,0.7);
+    width: fit-content;
+    height: fit-content;
+    padding: 2rem;
+    border:groove black 3px;
+    border-radius: 10%;
 }
-body {
-    font-family: "Lato", sans-serif;
+.blurry a{
+    font-size:24px;
+    margin:0.3rem;
+    color: black;
 }
-button{
-    border: none;
+.blurr{
+    background-color: rgb(50, 94, 122,0.3);
+    width: fit-content;
+    height: fit-content;
     border-radius: 50%;
-    color: white;
-    display: inline-block;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-    background-color: black;
-    align-items: center;
-    justify-content: center;
+    border:groove black 3px;
 }
-
+.mydrop{ 
+    width: 300px;
+    height: 10rem;
+}
+.container .myborder{
+    background-color: rgb(50, 94, 122);
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius:5%;
+    border:none;
+}
+.myborder a{
+    color: rgb(189, 209, 223);
+}
+.mynav{
+    list-style: none;
+}
+#LikesModal{
+    margin-top: 5rem;
+}
+#CommentsModal{
+    margin-top: 5rem;
+}
+#profileModal{
+    margin-top: 5rem;
+}
 input{
     border:solid thin black;
 }
 .sidebar {
+    border:solid #4484ab 2px;
+    margin-top:4.4rem;
+    text-align: center;
     height: 100%;
     width: 0;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color:rgb(50, 94, 122);
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -37,39 +67,31 @@ input{
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: rgb(98, 174, 181);
     display: block;
     transition: 0.3s;
 }
 
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: white;
 }
 
 .sidebar .closebtn {
-    position: absolute;
     top: 0;
+    position: absolute;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+    margin-top: 1rem;
 }
-
-.openbtn {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: #111;
-    color: white;
-    padding: 1px 1px;
-    border: none;
+.mynav li{
+    margin-right: 0.5rem;
 }
-
-.openbtn:hover {
-    background-color: #444;
-}
-
 #main {
     transition: margin-left .5s;
-    padding: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    top:0;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */

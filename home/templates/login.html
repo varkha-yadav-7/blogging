@@ -8,8 +8,8 @@
     </head>
     <body>
         {% block bodyhere %}
-        <h1>Hello User !</h1><br>
-        <div class="blurry">
+        <div class="blurry mx-auto">
+            <h1>Hello User !</h1><br>
             <h2>Please Log In to your account</h2><br>
             <form action="/verify/" method="post">{% csrf_token %}
             <input id="username" type="text" placeholder="Username" name="username" required>
@@ -19,9 +19,9 @@
             <button>Log In</button>
             </form>
                 <p><br></p>
-                <a href="/signup/"><button>New User ?</button></a>
+                <a style="font-size: unset;" href="/signup/"><button>New User ?</button></a>
                 <p><br></p>
-                <a href="/verifypass/"><button>Forgot Password ?"</button></a>
+                <a style="font-size: unset;" href="/verifypass/"><button>Forgot Password ?"</button></a>
                 <p><br></p>
         </div>
         <br>

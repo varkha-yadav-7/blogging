@@ -9,24 +9,30 @@
     <body>
         {% block bodyhere %}
         {% load mytags %}
-        <h1>Bookmarked Posts</h1>
-        {% for i in book %}
-        <div class="container border-1" style="margin-left:auto;margin-right:auto;">
-            {% if i.Username %}
-                <h3>By {{ i.Username }}</h3>
-                <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{i.Image.url}}">
-                <h4>{{i.caption}}</h4>
-                <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 40px;">Likes : {% totalLikes i.id %}</a>
-                <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">Comments : {% totalComments i.id %}</a>
-                <br><br>
-                <form action="/removebookmark/" method="POST">{% csrf_token %}
-                    <button value="{{i.id}}" name="object">Remove Bookmark</button>
-                </form><br>
-            {% else %}
+        <div class="container" style="overflow: scroll;">
+          <h1>Bookmarked Posts</h1>
+          {% for i in book %}
+          <div class="card myborder">
+              {% if i.Username %}
+              {%csrf_token%}
+              <h3 class="card-title"><a onclick="pro({{ i.id }})" href="#profileModal" data-toggle="modal" id="profile">{{i.Username}}</a></h3>
+              <p class="card-subtitle" style="color: rgb(98, 174, 181);">{{i.time}}</p>
+              <img class="card-img" style="max-width:100%; max-height: 50rem;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
+              <h3 style="color: rgb(189, 209, 223);">{{ i.caption }}</h3>
+              <div class="content-block">
+              <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 39px;">Likes : {% totalLikes i.id %}</a>
+              <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">Comments : {% totalComments i.id %}</a>
+              </div>
+              <br>
+              <form action="/removebookmark/" method="POST">{% csrf_token %}
+                <button class="btn btn-info" value="{{i.id}}" name="object">Remove Bookmark</button>
+              </form><br>
+              {% else %}
                 <h5>{{i}}</h5>
-            {% endif %}
-        </div><br>
-        {% endfor %}
+              {% endif %}
+          </div><br>
+          {% endfor %}
+        </div>
         <div class="modal fade" id="LikesModal" role="dialog">
             <div class="modal-dialog">
               <div class="modal-content">

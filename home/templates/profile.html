@@ -8,8 +8,9 @@
     </head>
     <body>
         {% block bodyhere %}
-        <h2>Profile</h2><br>
-                <p><br></p>
+        <div class="blurry mx-auto">
+            <h2>Profile</h2><br>
+                <br>
                 <img height="100px" width="100px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src={{pro.Dp.url}}>
                 <p style="font-weight: bold; padding: 10px;">Username : {{pro.Username}}</p>
                 <p>First Name : {{ pro.First_Name }}</p>
@@ -25,6 +26,7 @@
                     </form><br>
                 {% endif %}
                 <h4>{{edits}}</h4>
-        {% endblock %}
+            {% endblock %}
+        </div>
 	</body>
 </html>

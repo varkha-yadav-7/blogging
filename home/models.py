@@ -16,6 +16,7 @@ class Posts(models.Model):
     Image=models.ImageField(upload_to='images/', default='images/None/no-image.jpg')
     caption=models.TextField(max_length=1000)
     Username=models.CharField(max_length=20)
+    time=models.DateTimeField(auto_now=True)
     Likes=models.TextField(max_length=10000,default='[]')
 
 class Comments(models.Model):

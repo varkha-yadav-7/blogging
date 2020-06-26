@@ -1,12 +1,11 @@
 function openNav() 
 {
     document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
+    document.getElementById("mySidebar").style.marginLeft = "0";
 }
 function closeNav() 
 {
     document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
 }
 function liked(id) 
 {
@@ -153,8 +152,12 @@ function notif()
         data:{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val()},
         success: function(response)
         {
+            console.log(response);
             var s=response.replace('[','');
+            console.log(response);
+            console.log(s);
             s=s.replace(']','');
+            console.log(s);
             if(s!="")
             {
                 s=s.split('"').join('');

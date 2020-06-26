@@ -7,39 +7,42 @@
         <title>Blogging</title>
         <script src="{% static 'home/base.js' %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'home/blogging.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bubblegum Sans">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
-    <body style="background-color: rgb(201, 198, 197); text-align: center;">
+    <body style="font-family:'Bubblegum Sans';background-image: url('https://cdn.pixabay.com/photo/2017/08/10/02/05/tiles-shapes-2617112_960_720.jpg');text-align: center;background-size: cover;background-attachment: fixed;">
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
-        <nav class="navbar navbar-dark mynav" style="background-color: black;">
+        <nav class="navbar navbar-dark navbar-fixed-top" style="background-color: rgb(50, 94, 122);position: sticky;top: 0em;z-index: 9999;">
           {% load mytags %}
             {% if request.session.name %}
                 <div>
-                    <button id="main" class="openbtn" onclick="openNav()">☰</button>
+                    <button id="main" class="btn btn-outline-info openbtn" onclick="openNav()">☰</button>
                 </div>
             {% else %}
                 <span class="navbar-brand">Blogging</span>
             {% endif %}
             <ul class="row justify-content-end mynav">
-            <li><a href="/" class="navbar-brand">Home</a></li>
+            <li><a href="/" class="btn btn-outline-info">Home</a></li>
+            <li><a href="/about/" class="btn btn-outline-info">About</a></li>
             {% if request.session.name %}
             <div class="dropdown">
-            <a onclick="notif()" class="navbar-brand" role="button" id="mydrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Notifications<span id="nbadge" class="badge badge-danger">{% totalNotifications request.session.username %}</span></a>
-            <div class="dropdown-menu mydrop" aria-labelledby="mydrop">
-              <div class="dropdown-header" style="color: blue;">Marked as Read Now</div>
-              <div id="notifylist">
-
+              <a onclick="notif()" style="margin-right: 0.5rem;" class="btn btn-outline-info" role="button" id="mydrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Notifications<span id="nbadge" class="badge badge-danger">{% totalNotifications request.session.username %}</span></a>
+              <div class="dropdown-menu mydrop" aria-labelledby="mydrop">
+                <div class="dropdown-header" style="color: blue;">Marked as Read Now</div>
+                <div id="notifylist">
+  
+                </div>
+              </div>
               </div>
             </div>
-            </div>
-            <li><a href="/logout/" class="navbar-brand">Logout ({{request.session.name}})</a></li>
+            <li><a href="/logout/" class="btn btn-outline-info">Logout ({{request.session.name}})</a></li>
             {% else %}
-            <li><a href="/signup/" class="navbar-brand">Sign up</a></li>
-            <li><a href="/login/" class="navbar-brand">Login</a></li>
-            <li><a href="/myadmin/" class="navbar-brand">Admin</a></li>
+            <li><a href="/signup/" class="btn btn-outline-info">Sign up</a></li>
+            <li><a href="/login/" class="btn btn-outline-info">Login</a></li>
+            <li><a href="/myadmin/" class="btn btn-outline-info">Admin</a></li>
             {% endif %}
             </ul>
         </nav>
@@ -55,38 +58,43 @@
             <br>
           {% block bodyhere %}
           <h1>Blogging</h1><br>
+          <div class="container mx-auto">
           {% for i in post %}
-            <div class="container border-1" style="margin-left:auto;margin-right:auto;">
+            <div class="card myborder">
                 {%csrf_token%}
-                <h3>Post by <a onclick="pro({{ i.id }})" href="#profileModal" data-toggle="modal" id="profile">{{i.Username}}</a></h3>
-                <img height="500px" width="500px" style="max-width: 100%; height: auto;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
-                <h4>{{ i.caption }}</h4>
+                <h3 class="card-title"><a onclick="pro({{ i.id }})" href="#profileModal" data-toggle="modal" id="profile">{{i.Username}}</a></h3>
+                <p class="card-subtitle" style="color: rgb(98, 174, 181);">{{i.time}}</p>
+                <img class="card-img" style="max-width:100%; max-height: 50rem;" class="imag-thumbnail img-responsive" src="{{ i.Image.url }}">
+                <h3 style="color: rgb(189, 209, 223);">{{ i.caption }}</h3>
                 {%csrf_token%}
+                <div>
                 <a onclick="showLikes({{i.id}})" href="#LikesModal" data-toggle="modal" id="totalL{{i.id}}" style="padding-right: 40px;">Likes : {% totalLikes i.id %}</a>
                 <a onclick="showComments({{i.id}})" href="#CommentsModal" data-toggle="modal" id="totalC{{i.id}}">Comments : {% totalComments i.id %}</a>
+                </div>
                 {% if request.session.username %}
                 {%csrf_token%}
                 <div style="padding: 10px;" class="content-block">
-                <button style="margin-right: 40px;" onclick="liked({{i.id}})" id="like{{i.id}}">{% getLikes i.id likes %}</button>
-                <button onclick="bookmarked({{i.id}})" id="book{{i.id}}">{% getBookmarks i.id book %}</button>
+                <button class="btn btn-info" style="margin-right: 40px;" onclick="liked({{i.id}})" id="like{{i.id}}">{% getLikes i.id likes %}</button>
+                <button class="btn btn-info" onclick="bookmarked({{i.id}})" id="book{{i.id}}">{% getBookmarks i.id book %}</button>
                 </div>
                 <form action="/commenting/" method="POST">{% csrf_token %}
                     <input type="text" name="comment" placeholder="Type a comment"> 
-                <button onclick="comments({{i.id}})" id="comment{{i.id}}" value="{{i.id}}" name="pid">Comment</button>
+                <button class="btn btn-info" onclick="comments({{i.id}})" id="comment{{i.id}}" value="{{i.id}}" name="pid">Comment</button>
                 </form><br>
                 {% else %}
                 <form action="/login/" method="POST">{% csrf_token %}
                   <div style="padding: 10px;" class="content-block">
-                    <button style="margin-right: 40px;">Like</button>
-                    <button>Bookmark</button>
+                    <button class="btn btn-info" style="margin-right: 40px;">Like</button>
+                    <button class="btn btn-info">Bookmark</button>
                   </div>
                     <input type="text" placeholder="Type a comment"> 
-                    <button>Comment</button><br>
+                    <button class="btn btn-info">Comment</button><br>
                 </form><br>
                 {% endif %}
             </div><br>
             {% endfor %}
-            <div class="modal fade" id="LikesModal" role="dialog">
+          </div>
+            <div class="modal fade" id="LikesModal"  role="dialog">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">

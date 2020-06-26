@@ -8,8 +8,8 @@
     </head>
     <body>
         {% block bodyhere %}
-        <h1>Hello Admin !</h1><br>
-        <div class="blurry">
+        <div class="blurry mx-auto">
+            <h1>Hello Admin !</h1><br>
             <h2>Please Log In to your account</h2><br>
             <form action="/admin_verify/" method="post">{% csrf_token %}
             <input id="username" type="text" placeholder="Username" name="username" required>
@@ -19,7 +19,7 @@
             <button>Log In</button>
             </form>
                 <p><br></p>
-                <a href="/forgotpassword/"><button>Forgot Password ?</button></a>
+                <a style="font-size: unset;" href="/forgotpassword/"><button>Forgot Password ?</button></a>
                 <p><br></p>
         </div>
         <br>

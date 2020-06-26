@@ -19,7 +19,6 @@ def home(request):
     d=[]
     p=Posts.objects.all()
     if 'username' in request.session:
-        print(request.session['username'])
         u=Users.objects.get(Username=request.session['username'])
         t=json.loads(u.Likes)
         d=json.loads(u.Bookmarks)
@@ -119,6 +118,9 @@ def editing(request):
     request.session['name']=c.First_Name+" "+c.Last_Name
     edits='Changes Successfully updated'
     return HttpResponseRedirect('/viewprofile/')
+
+def about(request):
+    return render(request,'about.html',context=None)
 
 def logout(request):
     global error, errora, edits, errorl

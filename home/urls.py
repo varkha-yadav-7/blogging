@@ -44,6 +44,7 @@ urlpatterns=[
     path('verifypass/',views.verifypass),
     path('reset/',views.reset),
     path('verifying/',views.verifying),
+    path('about/',views.about),
 ]
 
 if settings.DEBUG: 
